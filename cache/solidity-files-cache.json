@@ -1,0 +1,146 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "E:\\Solidity\\ChainlinkVRF\\contracts\\RandomNumberConsumer.sol": {
+      "lastModificationDate": 1629101589975,
+      "contentHash": "538eb696019b0bedc5189993d6b2a33c",
+      "sourceName": "contracts/RandomNumberConsumer.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol"
+      ],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "RandomNumberConsumer"
+      ]
+    },
+    "E:\\Solidity\\ChainlinkVRF\\node_modules\\@chainlink\\contracts\\src\\v0.8\\VRFConsumerBase.sol": {
+      "lastModificationDate": 1629084034586,
+      "contentHash": "b2cd4396ec9f9d0b2dd385cc26d54298",
+      "sourceName": "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./interfaces/LinkTokenInterface.sol",
+        "./VRFRequestIDBase.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "VRFConsumerBase"
+      ]
+    },
+    "E:\\Solidity\\ChainlinkVRF\\node_modules\\@chainlink\\contracts\\src\\v0.8\\interfaces\\LinkTokenInterface.sol": {
+      "lastModificationDate": 1629084034626,
+      "contentHash": "6d810dc28dac1e67147711dd3b35aae2",
+      "sourceName": "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "LinkTokenInterface"
+      ]
+    },
+    "E:\\Solidity\\ChainlinkVRF\\node_modules\\@chainlink\\contracts\\src\\v0.8\\VRFRequestIDBase.sol": {
+      "lastModificationDate": 1629084034586,
+      "contentHash": "cd3cfe02e0dcd3100ba2fef4ee94bb9e",
+      "sourceName": "@chainlink/contracts/src/v0.8/VRFRequestIDBase.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "VRFRequestIDBase"
+      ]
+    }
+  }
+}
