@@ -8,17 +8,16 @@ contract RandomNumberConsumer is VRFConsumerBase {
 
     bytes32 internal keyHash;
     uint256 internal fee;
-    bytes32 internal  id;
     uint256 internal randomResult;
-    mapping(address => uint256) public userRandom;
+    mapping(address => uint256) internal userRandom;
     mapping(bytes32 => address) internal requestIdToAddress;
 
 
     /**
      * @dev 继承VRFConsumerBase
-     * @param VRF地址 0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9
-     * @param LINK地址 0xa36085F69e2889c224210F603D836748e7dC0088
-     * @param KeyHash 0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4
+     * VRF地址 0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9
+     * LINK地址 0xa36085F69e2889c224210F603D836748e7dC0088
+     * KeyHash 0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4
      */
     constructor()
     VRFConsumerBase(
@@ -63,5 +62,14 @@ contract RandomNumberConsumer is VRFConsumerBase {
             expandedValues[i] = (uint256(keccak256(abi.encode(randomResult, i))) % 50) + 1;
         }
         return expandedValues;
+    }
+
+    /**
+    * @dev 使用用户地址查询用户随机数
+    * @param userAddress 用户地址
+    * @return random 随机数
+    */
+    function getUserRandom(address userAddress) public view returns (uint256 random) {
+        return userRandom[userAddress];
     }
 }
