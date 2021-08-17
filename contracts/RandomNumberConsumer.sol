@@ -89,14 +89,12 @@ contract GrabARedEnvelope is Ownable {
 
     /**
     * @dev 合约部署
-    * @param _randomNumberConsumer 获取随机数合约地址
     * @param _tokenAddress token地址
     */
     constructor(
-        RandomNumberConsumer _randomNumberConsumer,
         ERC20 _tokenAddress
     ){
-        randomNumberConsumer = _randomNumberConsumer;
+        randomNumberConsumer = new RandomNumberConsumer();
         tokenAddress = _tokenAddress;
     }
 
@@ -131,5 +129,23 @@ contract GrabARedEnvelope is Ownable {
     function getReceivingUsers() public view returns (uint256){
         return userCount;
     }
+
+    /**
+    * @dev 借出token
+    * @param _userAddress 借用用户地址
+    * @param _count 借用数量
+    */
+    function borrowMoney(ERC20 _tokenAddress, address _userAddress, uint256 _count) public onlyOwner {
+        _tokenAddress.safeTransfer(_userAddress, _count * (10 ** tokenAddress.decimals()));
+    }
+
+    /**
+    * @dev 修改随机数地址
+    * @param _randomNumberAddress 随机数合约地址
+    */
+    function setRandomNumberAddress(RandomNumberConsumer _randomNumberAddress) public onlyOwner {
+        randomNumberConsumer = _randomNumberAddress;
+    }
+
 
 }
