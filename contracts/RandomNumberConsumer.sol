@@ -19,7 +19,7 @@ contract RandomNumberConsumer is VRFConsumerBase {
 
 
     /**
-     * @dev 继承VRFConsumerBase
+     * 继承VRFConsumerBase
      * VRF地址 0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9
      * LINK地址 0xa36085F69e2889c224210F603D836748e7dC0088
      * KeyHash 0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4
@@ -80,10 +80,18 @@ contract RandomNumberConsumer is VRFConsumerBase {
     }
 }
 
-contract userReceive is Ownable {
+/// @title 抢红包方法
+contract GrabARedEnvelope is Ownable {
     using SafeERC20 for ERC20;
     ERC20 tokenAddress;
     RandomNumberConsumer randomNumberConsumer;
+    uint256 userCount;
+
+    /**
+    * @dev 合约部署
+    * @param _randomNumberConsumer 获取随机数合约地址
+    * @param _tokenAddress token地址
+    */
     constructor(
         RandomNumberConsumer _randomNumberConsumer,
         ERC20 _tokenAddress
@@ -91,20 +99,37 @@ contract userReceive is Ownable {
         randomNumberConsumer = _randomNumberConsumer;
         tokenAddress = _tokenAddress;
     }
-    function userUse() public {
+
+    /**
+    * @dev 用户领取，给用户生成相应的随机数，将延时获得
+    */
+    function userReceive() public {
         randomNumberConsumer.getRandomNumber(msg.sender);
+        userCount++;
     }
 
-    function getUser(address userAddress) public view returns (uint256 userCount){
-        return randomNumberConsumer.getUserRandom(userAddress);
+    /**
+    * dev 查看用户手气
+    * @param _userAddress 用户地址
+    */
+    function getUser(address _userAddress) public view returns (uint256){
+        return randomNumberConsumer.getUserRandom(_userAddress);
     }
 
-
-
-    function receivesssss() public {
-        uint256 userCount = getUser(msg.sender);
-        require(userCount > 0, "There are currently no rewards");
-        tokenAddress.safeTransfer(msg.sender, userCount * (10 ** tokenAddress.decimals()));
-
+    /**
+    * dev 获得奖金
+    */
+    function obtainBonus() public {
+        uint256 userReceivingCount = getUser(msg.sender);
+        require(userReceivingCount > 0, "There are currently no rewards");
+        tokenAddress.safeTransfer(msg.sender, userReceivingCount * (10 ** tokenAddress.decimals()));
     }
+
+    /**
+    * @dev 查看领取用户数量
+    */
+    function getReceivingUsers() public view returns (uint256){
+        return userCount;
+    }
+
 }
