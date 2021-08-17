@@ -9,8 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 
-contract RandomNumberConsumer is VRFConsumerBase {
-
+contract RandomNumberConsumer is VRFConsumerBase, Ownable {
     bytes32 internal keyHash;
     uint256 internal fee;
     uint256 internal randomResult;
@@ -50,7 +49,7 @@ contract RandomNumberConsumer is VRFConsumerBase {
      * @param userAddress 用户地址
      * @return requestId 用于验证的id
      */
-    function getRandomNumber(address userAddress) external returns (bytes32 requestId) {
+    function getRandomNumber(address userAddress) external onlyOwner returns (bytes32 requestId) {
         require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK");
         requestId = requestRandomness(keyHash, fee);
         requestIdToAddress[requestId] = userAddress;
@@ -74,7 +73,7 @@ contract RandomNumberConsumer is VRFConsumerBase {
     * @param n 得到随机数的数量
     * @return expandedValues n个随机数的数组
     */
-    function expand(uint256 n) external view returns (uint256[] memory expandedValues) {
+    function expand(uint256 n) external view onlyOwner returns (uint256[] memory expandedValues) {
         expandedValues = new uint256[](n);
         for (uint256 i = 0; i < n; i++) {
             expandedValues[i] = (uint256(keccak256(abi.encode(randomResult, i))) % 50) + 1;
@@ -87,24 +86,32 @@ contract RandomNumberConsumer is VRFConsumerBase {
     * @param userAddress 用户地址
     * @return random 随机数
     */
-    function getUserRandom(address userAddress) external view returns (uint256 random) {
+    function getUserRandom(address userAddress) external view onlyOwner returns (uint256 random) {
         return userRandom[userAddress];
     }
 
     /**
     * @dev !!!随机数生成限制!!!
     */
-    function randomLimit() private view returns (uint256){
+    function randomLimit() private view onlyOwner returns (uint256){
         return x;
+    }
+
+    /**
+    * @dev 用户领取清零
+    * @param _userAddress 用户地址
+    */
+    function setUserRandom(address _userAddress) external onlyOwner {
+        userRandom[_userAddress] = 0;
     }
 }
 
 /// @title 抢红包方法
 contract GrabARedEnvelope is Ownable {
     using SafeERC20 for ERC20;
-    ERC20 tokenAddress;
-    RandomNumberConsumer randomNumberConsumer;
-    uint256 userCount;
+    ERC20 public tokenAddress;
+    RandomNumberConsumer public randomNumberConsumer;
+    uint256 internal userCount;
 
     /**
     * @dev 合约部署
@@ -144,6 +151,7 @@ contract GrabARedEnvelope is Ownable {
         uint256 userReceivingCount = getUser(msg.sender);
         require(userReceivingCount > 0, "There are currently no rewards");
         tokenAddress.safeTransfer(msg.sender, userReceivingCount * (10 ** tokenAddress.decimals()));
+        randomNumberConsumer.setUserRandom(msg.sender);
     }
 
     /**
