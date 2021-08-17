@@ -2,6 +2,11 @@
 pragma solidity 0.8.4;
 
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 
 contract RandomNumberConsumer is VRFConsumerBase {
@@ -31,12 +36,13 @@ contract RandomNumberConsumer is VRFConsumerBase {
 
     /**
      * @dev 生成随机数
+     * @param userAddress 用户地址
      * @return requestId 用于验证的id
      */
-    function getRandomNumber() public returns (bytes32 requestId) {
+    function getRandomNumber(address userAddress) public returns (bytes32 requestId) {
         require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK");
         requestId = requestRandomness(keyHash, fee);
-        requestIdToAddress[requestId] = msg.sender;
+        requestIdToAddress[requestId] = userAddress;
         return requestId;
     }
 
@@ -71,5 +77,34 @@ contract RandomNumberConsumer is VRFConsumerBase {
     */
     function getUserRandom(address userAddress) public view returns (uint256 random) {
         return userRandom[userAddress];
+    }
+}
+
+contract userReceive is Ownable {
+    using SafeERC20 for ERC20;
+    ERC20 tokenAddress;
+    RandomNumberConsumer randomNumberConsumer;
+    constructor(
+        RandomNumberConsumer _randomNumberConsumer,
+        ERC20 _tokenAddress
+    ){
+        randomNumberConsumer = _randomNumberConsumer;
+        tokenAddress = _tokenAddress;
+    }
+    function userUse() public {
+        randomNumberConsumer.getRandomNumber(msg.sender);
+    }
+
+    function getUser(address userAddress) public view returns (uint256 userCount){
+        return randomNumberConsumer.getUserRandom(userAddress);
+    }
+
+
+
+    function receivesssss() public {
+        uint256 userCount = getUser(msg.sender);
+        require(userCount > 0, "There are currently no rewards");
+        tokenAddress.safeTransfer(msg.sender, userCount * (10 ** tokenAddress.decimals()));
+
     }
 }
