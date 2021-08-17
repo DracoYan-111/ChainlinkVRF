@@ -73,7 +73,7 @@ contract RandomNumberConsumer is VRFConsumerBase, Ownable {
     * @param n 得到随机数的数量
     * @return expandedValues n个随机数的数组
     */
-    function expand(uint256 n) external view onlyOwner returns (uint256[] memory expandedValues) {
+    function expand(uint256 n) external view returns (uint256[] memory expandedValues) {
         expandedValues = new uint256[](n);
         for (uint256 i = 0; i < n; i++) {
             expandedValues[i] = (uint256(keccak256(abi.encode(randomResult, i))) % 50) + 1;
@@ -86,14 +86,14 @@ contract RandomNumberConsumer is VRFConsumerBase, Ownable {
     * @param userAddress 用户地址
     * @return random 随机数
     */
-    function getUserRandom(address userAddress) external view onlyOwner returns (uint256 random) {
+    function getUserRandom(address userAddress) external view returns (uint256 random) {
         return userRandom[userAddress];
     }
 
     /**
     * @dev !!!随机数生成限制!!!
     */
-    function randomLimit() private view onlyOwner returns (uint256){
+    function randomLimit() private view returns (uint256){
         return x;
     }
 
@@ -103,6 +103,16 @@ contract RandomNumberConsumer is VRFConsumerBase, Ownable {
     */
     function setUserRandom(address _userAddress) external onlyOwner {
         userRandom[_userAddress] = 0;
+    }
+
+    /**
+    * @dev 修改x,y
+    * @param _x x值
+    * @param _y y值
+    */
+    function setXAndY(uint256 _x, uint256 _y) external onlyOwner {
+        x = _x;
+        y = _y;
     }
 }
 
@@ -186,5 +196,12 @@ contract GrabARedEnvelope is Ownable {
         tokenAddress = _tokenAddress;
     }
 
-
+    /**
+    * @dev 修改x,y
+    * @param _x x值
+    * @param _y y值
+    */
+    function setXAndY(uint256 _x, uint256 _y) external onlyOwner {
+        randomNumberConsumer.setXAndY(_x, _y);
+    }
 }
